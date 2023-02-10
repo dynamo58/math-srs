@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+	<title>math-srs</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="/src/style.css" />
+    <script type="module" src="/src/main.ts" defer></script>
+	<script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+	<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+  </head>
+
+  <body>
+    <div class="main-container row">
+		<div class="sidebar container" id="sidebar">
+			<div class="sidebar-item container active">
+				<img src="/src/assets/home-icon.svg" class="icon" id="home-btn" alt="Home" />
+			</div>
+			<div class="sidebar-item container">
+				<img src="/src/assets/list-icon.svg" class="icon" id="sets-btn" alt="Sets" />
+			</div>
+			<div class="sidebar-item container"></div>
+		</div>
+		<div class="content">
+			<h1>Welcome to Tauri!</h1>
+			<p style="font-size: 2em;user-select: none !important;"> \[ \int_{-\infty}^{\infty} e^{-x^2} dx = \sqrt{\pi} \] </p>
+			<iframe src="/src/pages/home.html" frameborder="0" id="content-frame"></iframe>
+		</div>
+
+
+      <!-- <div class="row"> -->
+        <!-- <div> -->
+          <!-- <input id="greet-input" placeholder="Enter a name..." /> -->
+          <!-- <button id="greet-button" type="button">Greet</button> -->
+        <!-- </div> -->
+      <!-- </div> -->
+<!--  -->
+      <!-- <p id="greet-msg"></p> -->
+    </div>
+  </body>
+</html>
