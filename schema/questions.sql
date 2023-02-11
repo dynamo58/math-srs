@@ -1,0 +1,5 @@
+CREATE TABLE IF NOT EXISTS questions (
+	id INTEGER PRIMARY KEY,
+	ser_question TEXT NOT NULL,
+	ser_answer TEXT NOT NULL
+);

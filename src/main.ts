@@ -1,38 +1,53 @@
 import { invoke } from "@tauri-apps/api/tauri";
 
-let greetInputEl: HTMLInputElement | null;
-let greetMsgEl: HTMLElement | null;
+interface Set {
+	id: number,
+	name: string,
+	uuid: string,
+	last_revised: number,
+	is_foreign: boolean,
+	description: String | null,
+}
 
-async function greet() {
-	if (greetMsgEl && greetInputEl) {
-		// Learn more about Tauri commands at https://tauri.app/v1/guides/features/command
-		greetMsgEl.textContent = await invoke("greet", {
-			name: greetInputEl.value,
-		});
+class Data {
+	sets: Set[];
+
+	constructor() {
+		this.sets = []
+	}
+
+	async refreshSets() {
+		this.sets = await invoke("get_sets");
+		console.log(this.sets);
 	}
 }
 
+let data = new Data;
+
 function init_listeners() {
 	window.onkeyup = (e) => {
-		if (e.ctrlKey && e.key == "b") {
+		if (e.ctrlKey && e.key == "b" || e.key == "B") {
 			document.getElementById("sidebar")!.classList.toggle("is-disabled");
 		}
 	}
 
+	// this doesnt really scale but I CBA rn
 	document.getElementById("home-btn")!.onclick = () => {
-		Array.from(document.getElementsByClassName("icon")).forEach(el => {
-			el.classList.remove("active")
+		document.getElementById("sets-btn")!.classList.remove("active");
+		document.getElementById("home-btn")!.classList.add("active");
+		document.getElementById("content-frame")?.setAttribute("src", "/src/pages/home.html");
+	}
+	document.getElementById("sets-btn")!.onclick = async () => {
+		document.getElementById("home-btn")!.classList.remove("active");
+		document.getElementById("sets-btn")!.classList.add("active");
+		document.getElementById("content-frame")?.setAttribute("src", "/src/pages/sets.html");
+
+		data.refreshSets().then(() => {
+			console.log(data.sets)
 		});
 
-		document.getElementById("home-btn")!.classList.add("active")
-
-		document.getElementById("content-frame")?.setAttribute("src", "/src/pages/home.html")
 	}
 }
-
-// declare global {
-// interface Window { MathJax: any; }
-// }
 
 // enum ContentVariant {
 // Text,
@@ -55,22 +70,6 @@ function init_listeners() {
 // }
 // }
 
-// class Set {
-// name: string;
-// questions: Question[];
-
-// constructor(name: string) {
-// this.name = name
-// }
-// }
-
-window.addEventListener("DOMContentLoaded", () => {
+window.addEventListener("DOMContentLoaded", async () => {
 	init_listeners();
-
-
-	greetInputEl = document.querySelector("#greet-input");
-	greetMsgEl = document.querySelector("#greet-msg");
-	document
-		.querySelector("#greet-button")
-		?.addEventListener("click", () => greet());
 });

@@ -1,7 +1,21 @@
 <link rel="stylesheet" href="/src/style.css" />
-<script type="module" src="/src/main.ts" defer></script>
-<script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
-<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+<link rel="stylesheet" href="/src/pages/sets.css" />
 
+<div class="container">
+	<input type="text" placeholder="Search my sets" id="set-search-btn">
 
-<p>SETS</p>
+	<div class="container sets">
+		<div class="set">
+			<div class="set-info">
+				<div class="set-name set-info__item">Linear algebra I</div>
+				<div class="set-count set-info__item">Question count: <span id="set-count">99</span></div>
+				<div class="set-last set-info__item">Last revised: 1/1/71</div>
+			</div>
+			<div>
+				<div class="set-icon-container container">
+					<img src="/src/assets/bookmark.svg" alt="set icon" class="set-icon">
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
