@@ -39,6 +39,22 @@ body {
   text-align: center;
 }
 
+.center {
+	display: flex;
+	flex-direction: row;
+	justify-content: space-evenly;
+	text-align: center;
+}
+
+.is-disabled {
+	display: none
+}
+
+.border {
+	border: 2px solid var(--fg-main);
+	border-radius: 5px;
+}
+
 .main-container {
   height: 100vh;
   display: flex;
@@ -62,8 +78,8 @@ body {
   background-color: var(--bg-alt2) !important;
 }
 
-.sidebar.is-disabled {
-  width: 0
+.active-set-sidebar-item:first-child {
+	margin-top: 1em;
 }
 
 .content {
@@ -107,18 +123,43 @@ h1 {
   text-align: center;
 }
 
-input,
+input {
+	border-radius: 8px;
+	border: 1px solid transparent;
+	padding: 0.6em 1.2em;
+	font-size: 1em;
+	font-weight: 500;
+	font-family: inherit;
+	color: #0f0f0f;
+	background-color: #ffffff;
+	transition: border-color 0.25s;
+	box-shadow: 0 2px 2px rgba(0, 0, 0, 0.2);
+}
+
+/*
+button design adapted from
+https: //getcssscan.com/css-buttons-examples
+*/
 button {
-  border-radius: 8px;
-  border: 1px solid transparent;
-  padding: 0.6em 1.2em;
-  font-size: 1em;
-  font-weight: 500;
-  font-family: inherit;
-  color: #0f0f0f;
-  background-color: #ffffff;
-  transition: border-color 0.25s;
-  box-shadow: 0 2px 2px rgba(0, 0, 0, 0.2);
+	background: linear-gradient(to bottom right, #EF4765, #FF9A5A);
+	border: 0;
+	border-radius: 12px;
+	color: #FFFFFF;
+	cursor: pointer;
+	display: inline-block;
+	font-family: -apple-system, system-ui, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+	font-size: 16px;
+	font-weight: 500;
+	line-height: 2.5;
+	outline: transparent;
+	padding: 0 1rem;
+	text-align: center;
+	text-decoration: none;
+	transition: box-shadow .2s ease-in-out;
+	user-select: none;
+	-webkit-user-select: none;
+	touch-action: manipulation;
+	white-space: nowrap
 }
 
 button {
@@ -129,6 +170,14 @@ button:hover {
   border-color: #396cd8;
 }
 
+button:not([disabled]):focus {
+	box-shadow: 0 0 .25rem rgba(0, 0, 0, 0.5), -.125rem -.125rem 1rem rgba(239, 71, 101, 0.5), .125rem .125rem 1rem rgba(255, 154, 90, 0.5);
+}
+
+button:not([disabled]):hover {
+	box-shadow: 0 0 .25rem rgba(0, 0, 0, 0.5), -.125rem -.125rem 1rem rgba(239, 71, 101, 0.5), .125rem .125rem 1rem rgba(255, 154, 90, 0.5);
+}
+
 input,
 button {
   outline: none;
@@ -136,4 +185,85 @@ button {
 
 #greet-input {
   margin-right: 5px;
+}
+
+#search-input-el {
+	width: 25em;
+	align-self: center;
+}
+
+.sets {
+	margin: 10px auto;
+	display: grid;
+	grid-template-columns: repeat(auto-fit, minmax(201px, 1fr));
+	grid-gap: 1em;
+	width: 90%;
+}
+
+set-card {
+	display: flex;
+	flex-direction: row;
+	justify-content: start;
+	border-radius: 5px;
+	/* height: 4em; */
+	border: 2px solid var(--fg-main);
+	background-color: var(--bg-alt);
+	cursor: pointer;
+}
+
+
+.set-count {
+	font-size: 0.8em;
+}
+
+.set-icon-container {
+	width: 4em;
+	display: block;
+	/* background-color: var(--bg-alt2); */
+}
+
+
+
+.set-icon {
+	margin: 0.1em;
+	width: 4em;
+	align-items: center;
+}
+
+.set-info {
+	width: 100%;
+}
+
+#set-count {
+	font-family: monospace;
+}
+
+#set-creation-div {
+	padding: 1em;
+	width: min(100%, 40em);
+	margin: 1em auto;
+}
+
+/*
+	SET REVISION
+*/
+
+#question-question {
+	font-size: 1.3em;
+}
+
+#question-reveal-btn,
+#question-next-btn {
+	max-width: 15em;
+	align-self: center;
+}
+
+.question-btns-div {
+	margin: 0 auto;
+	position: absolute;
+	display: flex;
+	flex-direction: column;
+	bottom: 0;
+	left: 0;
+	right: 0;
 }

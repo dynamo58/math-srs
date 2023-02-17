@@ -4,5 +4,6 @@ CREATE TABLE IF NOT EXISTS sets (
 	uuid         TEXT NOT NULL,
 	last_revised INTEGER,
 	is_foreign   INTEGER DEFAULT 0,
-	description  TEXT DEFAULT ""
+	description  TEXT DEFAULT "",	
+	question_count INTEGER DEFAULT 0
 );

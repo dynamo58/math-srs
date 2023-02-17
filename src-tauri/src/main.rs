@@ -3,50 +3,21 @@
     windows_subsystem = "windows"
 )]
 
-use math_srs::{files, models, Retainer};
-
-use tauri::{Manager, State};
-
-#[tauri::command]
-fn get_sets(ret: State<'_, Retainer>) -> Vec<models::Set> {
-    let db = ret.sets_db.lock().unwrap();
-
-    let mut stmt = db.prepare("SELECT * FROM sets").unwrap();
-
-    let sets: Vec<models::Set> = stmt
-        .query_map([], |row| {
-            Ok(models::Set {
-                id: row.get(0)?,
-                name: row.get(1)?,
-                uuid: row.get(2)?,
-                last_revised: row.get(3)?,
-                is_foreign: row.get(4)?,
-                description: row.get(5)?,
-            })
-        })
-        .unwrap()
-        .map(|r| r.unwrap())
-        .collect();
-
-    return sets;
-}
+use math_srs::{commands, files};
 
 fn main() -> anyhow::Result<()> {
-    let mut ret = files::check_file_integrity()?;
-
-    files::create_set(
-        &mut ret,
-        "Linear Algebra I".into(),
-        "Linear Algebra I theory notes".into(),
-    )?;
+    let ret = files::check_file_integrity()?;
 
     tauri::Builder::default()
-        .setup(move |app| {
-            app.manage(ret);
-
-            Ok(())
-        })
-        .invoke_handler(tauri::generate_handler![get_sets])
+        .manage(std::sync::Mutex::new(ret))
+        .invoke_handler(tauri::generate_handler![
+            commands::get_sets,
+            commands::create_set,
+            commands::create_set,
+            commands::edit_set,
+            commands::add_question_to_set,
+            commands::get_set_questions
+        ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
     Ok(())

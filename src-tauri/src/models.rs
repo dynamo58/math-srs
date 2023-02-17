@@ -8,6 +8,7 @@ pub struct Set {
     pub last_revised: Option<u64>,
     pub is_foreign: bool,
     pub description: Option<String>,
+	pub question_count: u16,
 }
 
 #[derive(Clone, serde::Serialize, Debug)]

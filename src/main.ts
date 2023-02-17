@@ -1,75 +1,95 @@
 import { invoke } from "@tauri-apps/api/tauri";
 
-interface Set {
-	id: number,
-	name: string,
-	uuid: string,
-	last_revised: number,
-	is_foreign: boolean,
-	description: String | null,
-}
-
-class Data {
-	sets: Set[];
-
-	constructor() {
-		this.sets = []
-	}
-
-	async refreshSets() {
-		this.sets = await invoke("get_sets");
-		console.log(this.sets);
-	}
-}
+import { Data } from "./lib";
+import Home from "./pages/home";
+import Sets from "./pages/sets";
+import { Set } from "./components/set";
+import Sidebar from "./components/sidebar";
+import { RouteEventProps} from "./lib";
+import { QuestionLayout } from "./pages/question";
 
 let data = new Data;
 
-function init_listeners() {
-	window.onkeyup = (e) => {
-		if (e.ctrlKey && e.key == "b" || e.key == "B") {
-			document.getElementById("sidebar")!.classList.toggle("is-disabled");
+window.addEventListener("DOMContentLoaded", async () => {
+	const root = document.getElementById("__ROOT")! as HTMLDivElement;
+	const page_box = document.getElementById("__PAGE-BOX")! as HTMLDivElement;
+	const sidebar = new Sidebar();
+	root.insertBefore(sidebar, page_box);
+	const home_btn = document.getElementById("home-btn")! as HTMLDivElement;
+	const sets_btn = document.getElementById("sets-btn")! as HTMLDivElement;
+
+	window.addEventListener("start-revision", ((e: CustomEvent<{ set_uuid: string }>) => {
+		console.log("DEBUG: starting game...");
+
+		data.start_revision(e.detail.set_uuid);
+		window.dispatchEvent(new CustomEvent<{}>("next-question"));
+	}) as EventListener);
+
+	window.addEventListener("next-question", (() => {
+		console.log("DEBUG: changing question...");
+
+		page_box.replaceChildren(new QuestionLayout(data.pop_question()!)); // TODO
+		eval(`
+			MathJax.typesetClear();
+			MathJax.typesetPromise(document.querySelectorAll(".question"));
+		`);
+
+	}) as EventListener);
+
+
+	home_btn.onclick = () => {
+		window.dispatchEvent(new CustomEvent<RouteEventProps>("route", {
+			detail: {
+				new_element: new Home(),
+				is_temp: false,
+				sidebar_el_id: "home-btn",
+			}
+		}));
+	}
+	sets_btn.onclick = async () => {
+		window.dispatchEvent(new CustomEvent<RouteEventProps>("route", {
+			detail: {
+				new_element: new Sets(),
+				is_temp: false,
+				sidebar_el_id: "sets-btn",
+			}
+		}));
+
+		const sets_el = document.getElementById("sets")! as HTMLDivElement;
+		const search_input_el = document.getElementById("search-input-el")! as HTMLInputElement;
+		const set_creation_btn = document.getElementById("set-creation-btn")! as HTMLButtonElement;
+		const create_set_btn = document.getElementById("create-set-btn")! as HTMLButtonElement;
+		const set_creation_div = document.getElementById("set-creation-div")! as HTMLDivElement;
+		const name_input = document.getElementById("new-set-name")! as HTMLInputElement;
+		const desc_input = document.getElementById("new-set-desc")! as HTMLInputElement;
+
+		await data.refreshSets();
+		data.render_sets(sets_el);
+
+		search_input_el.onkeyup = (e) => {
+			e.preventDefault();
+			if (e.key == "Enter")
+				data.render_filtered_sets(sets_el, search_input_el.value)
+		}
+
+		set_creation_btn.onclick = () => {
+			set_creation_div.classList.remove("is-disabled");
+			set_creation_btn.classList.add("is-disabled");
+		}
+
+		create_set_btn.onclick = async () => {
+			let recd_set = await invoke("create_set", {
+				name: name_input.value,
+				desc: desc_input.value,
+			}) as Set;
+
+			data.add_and_render_set(sets_el, recd_set);
+
+			set_creation_div.classList.add("is-disabled");
+			set_creation_btn.classList.remove("is-disabled");
 		}
 	}
 
-	// this doesnt really scale but I CBA rn
-	document.getElementById("home-btn")!.onclick = () => {
-		document.getElementById("sets-btn")!.classList.remove("active");
-		document.getElementById("home-btn")!.classList.add("active");
-		document.getElementById("content-frame")?.setAttribute("src", "/src/pages/home.html");
-	}
-	document.getElementById("sets-btn")!.onclick = async () => {
-		document.getElementById("home-btn")!.classList.remove("active");
-		document.getElementById("sets-btn")!.classList.add("active");
-		document.getElementById("content-frame")?.setAttribute("src", "/src/pages/sets.html");
 
-		data.refreshSets().then(() => {
-			console.log(data.sets)
-		});
-
-	}
-}
-
-// enum ContentVariant {
-// Text,
-// Image,
-// }
-
-// import { v4 as uuid } from 'uuid';
-
-// class Question {
-// id: string;
-// name: string;
-// question_content: [ContentVariant, string][];
-// answer_content: [ContentVariant, string][];
-
-// constructor(name: string, content: string, answer: string) {
-// this.id = uuid();
-// this.name = name;
-// this.question_content = [];
-// this.answer_content = [];
-// }
-// }
-
-window.addEventListener("DOMContentLoaded", async () => {
-	init_listeners();
+	home_btn.click();
 });

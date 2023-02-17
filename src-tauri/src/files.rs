@@ -1,4 +1,4 @@
-use std::sync::Mutex;
+use std::path::PathBuf;
 
 use crate::Retainer;
 use anyhow::Context;
@@ -37,7 +37,7 @@ pub fn check_file_integrity() -> anyhow::Result<Retainer> {
     Ok(Retainer::new(conn))
 }
 
-pub fn create_set(ret: &mut Retainer, name: String, desc: String) -> anyhow::Result<String> {
+pub fn create_set_files() -> anyhow::Result<(PathBuf, String)> {
     let uuid = Uuid::new_v4().to_string();
     let project_dirs = ProjectDirs::from("com", "Marek Smolik", "math-srs").context("lol")?;
     let data_path = project_dirs.data_dir();
@@ -49,18 +49,22 @@ pub fn create_set(ret: &mut Retainer, name: String, desc: String) -> anyhow::Res
     std::fs::create_dir(assets_db_path)?;
     std::fs::File::create(db_path.clone())?;
 
-    let conn = Connection::open(db_path.clone())?;
-    conn.execute(include_str!("../../schema/questions.sql"), [])?;
+    Ok((db_path, uuid))
+}
 
-    let sets_db_conn = ret.sets_db.lock().unwrap();
+pub fn get_set_db_path(uuid: String) -> PathBuf {
+    let project_dirs = ProjectDirs::from("com", "Marek Smolik", "math-srs").unwrap();
 
-    // .expect("THIS SHOULD ALWAYS BE REACHABLE Clueless");
-    sets_db_conn.execute(
-        "INSERT INTO sets (name, uuid, description) values (?1, ?2, ?3);",
-        [name, uuid.clone(), desc],
-    )?;
+    return project_dirs
+        .data_dir()
+        .join(uuid.clone())
+        .join("questions.db");
+}
 
-    ret.databases.insert(db_path, Mutex::new(conn));
+pub fn remove_whole_set_dir(set_uuid: String) -> anyhow::Result<()> {
+    let project_dirs = ProjectDirs::from("com", "Marek Smolik", "math-srs").context("lol")?;
+    #[allow(unused_must_use)]
+    std::fs::remove_dir_all(project_dirs.data_dir().join(set_uuid))?;
 
-    Ok(uuid)
+    Ok(())
 }
