@@ -132,6 +132,9 @@ pub fn add_question_to_set(
     ser_question: String,
     ser_answer: String,
 ) -> CommandResult<()> {
+    // let conn = Connection::open("df,gmvjndf,mdgdfth")?;
+    // conn.execute("sql", [])?;
+
     let mut ret = ret.inner().lock().unwrap();
 
     if let Some(conn) = ret.databases.get(&set_uuid) {
@@ -155,8 +158,10 @@ pub fn add_question_to_set(
         )
         .unwrap();
 
-        ret.sets_db
-            .execute("UPDATE sets SET question_count = question_count + 1 WHERE uuid=?1;", [set_uuid.clone()])?;
+        ret.sets_db.execute(
+            "UPDATE sets SET question_count = question_count + 1 WHERE uuid=?1;",
+            [set_uuid.clone()],
+        )?;
 
         ret.databases.insert(set_uuid, conn);
         return Ok(());
@@ -169,15 +174,12 @@ pub fn add_question_to_set(
 pub fn delete_question_from_set(
     ret: State<std::sync::Mutex<Retainer>>,
     set_uuid: String,
-	question_id: u32,
+    question_id: u32,
 ) -> CommandResult<()> {
     let mut ret = ret.inner().lock().unwrap();
 
     if let Some(conn) = ret.databases.get(&set_uuid) {
-        conn.execute(
-            "DELETE FROM questions WHERE id=?1;",
-            [question_id],
-        )?;
+        conn.execute("DELETE FROM questions WHERE id=?1;", [question_id])?;
 
         return Ok(());
     } else if files::get_set_db_path(set_uuid.clone()).is_file() {
@@ -187,13 +189,12 @@ pub fn delete_question_from_set(
         }
         let conn = Connection::open(path)?;
 
-        conn.execute(
-            "DELETE FROM questions WHERE id=?1;",
-            [question_id],
-        )?;
+        conn.execute("DELETE FROM questions WHERE id=?1;", [question_id])?;
 
-        ret.sets_db
-            .execute("UPDATE sets SET question_count = question_count - 1 WHERE uuid=?1;", [set_uuid.clone()])?;
+        ret.sets_db.execute(
+            "UPDATE sets SET question_count = question_count - 1 WHERE uuid=?1;",
+            [set_uuid.clone()],
+        )?;
 
         ret.databases.insert(set_uuid, conn);
         return Ok(());

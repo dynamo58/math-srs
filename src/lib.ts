@@ -100,12 +100,12 @@ export class Data {
 	}
 
 	pop_question(): Question | undefined {
-		return this.revision_data!.questions.pop_rand();
+		return this.revision_data?.questions.pop_rand();
 	}
 }
 
 export interface RouteEventProps {
 	new_element: HTMLElement,
-	is_temp: boolean,
+	// is_temp: boolean,
 	sidebar_el_id: string,
 }

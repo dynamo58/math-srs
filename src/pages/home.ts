@@ -2,11 +2,13 @@ export default class Home extends HTMLElement {
 	constructor() {
 		super();
 
-		this.innerHTML = `
-			<div class="container">
-				yo
-			</div>
-		`
+		// this.innerHTML = ``
+
+		// this.innerHTML = `
+		// 	<div class="container">
+		// 		yo
+		// 	</div>
+		// `
 	}
 }
 
