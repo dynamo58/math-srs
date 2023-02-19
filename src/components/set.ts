@@ -7,7 +7,7 @@ export interface Set {
 	id: number,
 	name: string,
 	uuid: string,
-	last_revised: number,
+	last_revised: string,
 	is_foreign: boolean,
 	description: string | null,
 	question_count: number,
@@ -20,7 +20,7 @@ export class SetCard extends HTMLElement {
 		super();
 		this.set = set;
 
-		const last_revised_str = (set.last_revised == null) ? "never" : time_since_unix_timestamp(set.last_revised);
+		const last_revised_str = (set.last_revised == null) ? "never" : time_since_unix_timestamp(Number(set.last_revised));
 		this.innerHTML = `
 			<div class="set-info">
 				<div class="set-name set-info__item">${set.name}</div>
@@ -28,7 +28,7 @@ export class SetCard extends HTMLElement {
 				<div class="set-last set-info__item">Last revised: ${last_revised_str}</div>
 			</div>
 			<div class="set-icon-container container">
-				<img src="/src/assets/edit-icon.svg" alt="set icon" class="set-icon">
+				<img src="/src/assets/pics/edit-icon.svg" alt="set icon" class="set-icon">
 			</div>
 		`;
 	}

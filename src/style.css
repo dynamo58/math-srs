@@ -17,6 +17,17 @@
 	-webkit-text-size-adjust: 100%;
 }
 
+@font-face {
+	font-family: garamond;
+	src: url("assets/fonts/garamond.ttf");
+}
+
+@font-face {
+	font-family: garamond;
+	src: url("assets/fonts/garamond-italic.ttf");
+	font-style: italic;
+}
+
 html,
 body {
 	margin: 0;
@@ -31,6 +42,10 @@ body {
 	box-sizing: border-box;
 }
 
+p {
+	font-family: garamond;
+}
+
 .container {
 	margin: 0;
 	display: flex;
@@ -40,10 +55,9 @@ body {
 }
 
 .center {
-	display: flex;
-	flex-direction: row;
-	justify-content: space-evenly;
-	text-align: center;
+	display: grid;
+	place-items: center;
+	align-items: center;
 }
 
 .is-disabled {
@@ -58,7 +72,7 @@ body {
 .flex-col {
 	display: flex;
 	flex-direction: column;
-	/* justify-content: center; */
+	justify-content: center;
 }
 
 .flex-row {
@@ -163,7 +177,7 @@ button {
 	font-family: -apple-system, system-ui, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
 	font-size: 16px;
 	font-weight: 500;
-	line-height: 2.5;
+	line-height: 2;
 	outline: transparent;
 	padding: 0 1rem;
 	text-align: center;
@@ -172,7 +186,8 @@ button {
 	user-select: none;
 	-webkit-user-select: none;
 	touch-action: manipulation;
-	white-space: nowrap
+	white-space: nowrap;
+	max-height: 3em;
 }
 
 button {
@@ -331,6 +346,7 @@ textarea {
 }
 
 #editing-question-question,
-#new-question-question {
+#new-question-question,
+#set-name {
 	border-bottom: 1px solid var(--fg-main);
 }

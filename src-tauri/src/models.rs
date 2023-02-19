@@ -5,10 +5,10 @@ pub struct Set {
     pub id: u32,
     pub name: String,
     pub uuid: String,
-    pub last_revised: Option<u64>,
+    pub last_revised: Option<String>,
     pub is_foreign: bool,
     pub description: Option<String>,
-	pub question_count: u16,
+    pub question_count: u16,
 }
 
 #[derive(Clone, serde::Serialize, Debug)]

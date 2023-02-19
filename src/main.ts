@@ -24,8 +24,9 @@ window.addEventListener("DOMContentLoaded", async () => {
 	window.addEventListener("start-revision", ((e: CustomEvent<{ set_uuid: string }>) => {
 		console.log("DEBUG: starting game...");
 
-		window.data.start_revision(e.detail.set_uuid);
-		window.dispatchEvent(new CustomEvent<{}>("next-question"));
+		window.data.start_revision(e.detail.set_uuid).then(() => {
+			window.dispatchEvent(new CustomEvent<{}>("next-question"));
+		});
 	}) as EventListener);
 
 	window.addEventListener("next-question", (() => {
@@ -36,7 +37,6 @@ window.addEventListener("DOMContentLoaded", async () => {
 			MathJax.typesetClear();
 			MathJax.typesetPromise(document.querySelectorAll(".question"));
 		`);
-
 	}) as EventListener);
 
 
@@ -44,7 +44,6 @@ window.addEventListener("DOMContentLoaded", async () => {
 		window.dispatchEvent(new CustomEvent<RouteEventProps>("route", {
 			detail: {
 				new_element: new Home(),
-				is_temp: false,
 				sidebar_el_id: "home-btn",
 			}
 		}));
@@ -53,12 +52,11 @@ window.addEventListener("DOMContentLoaded", async () => {
 		window.dispatchEvent(new CustomEvent<RouteEventProps>("route", {
 			detail: {
 				new_element: new Sets(),
-				is_temp: false,
 				sidebar_el_id: "sets-btn",
 			}
 		}));
 	}
 
 
-	// home_btn.click();
+	home_btn.click();
 });

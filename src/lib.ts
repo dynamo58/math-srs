@@ -59,7 +59,8 @@ Array.prototype.pop_rand = function () {
 export class Data {
 	sets: Set[];
 	revision_data?: {
-		questions: Question[]
+		questions: Question[],
+		count_at_start: number,
 	}
 
 	constructor() {
@@ -96,6 +97,7 @@ export class Data {
 
 		this.revision_data = {
 			questions,
+			count_at_start: questions.length
 		}
 	}
 

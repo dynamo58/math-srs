@@ -13,6 +13,8 @@ pub enum CommandError {
     RusqliteError(#[from] rusqlite::Error),
     #[error(transparent)]
     AnyhowError(#[from] anyhow::Error),
+    #[error(transparent)]
+    SystemTimeError(#[from] std::time::SystemTimeError),
 }
 
 impl Serialize for CommandError {
@@ -50,16 +52,19 @@ pub fn get_sets(state: State<'_, std::sync::Mutex<Retainer>>) -> CommandResult<V
     return Ok(sets);
 }
 
+use std::time::{SystemTime, UNIX_EPOCH};
+
 #[tauri::command]
 pub fn get_set_questions(
     state: State<'_, std::sync::Mutex<Retainer>>,
     set_uuid: String,
 ) -> CommandResult<Vec<models::Question>> {
     let ret = state.inner().lock().unwrap();
+    let questions: Vec<models::Question>;
 
     if let Some(conn) = ret.databases.get(&set_uuid) {
         let mut stmt = conn.prepare("SELECT * FROM questions")?;
-        let questions: Vec<models::Question> = stmt
+        questions = stmt
             .query_map([], |row| {
                 Ok(models::Question {
                     id: row.get(0)?,
@@ -69,8 +74,6 @@ pub fn get_set_questions(
             })?
             .map(|r| r.unwrap())
             .collect();
-
-        return Ok(questions);
     } else if files::get_set_db_path(set_uuid.clone()).is_file() {
         let path = files::get_set_db_path(set_uuid.clone());
         if !path.is_file() {
@@ -79,7 +82,7 @@ pub fn get_set_questions(
 
         let conn = Connection::open(path)?;
         let mut stmt = conn.prepare("SELECT * FROM questions")?;
-        let questions: Vec<models::Question> = stmt
+        questions = stmt
             .query_map([], |row| {
                 Ok(models::Question {
                     id: row.get(0)?,
@@ -89,11 +92,21 @@ pub fn get_set_questions(
             })?
             .map(|r| r.unwrap())
             .collect();
-
-        return Ok(questions);
+    } else {
+        return Err(CommandError::SetDoesntExist);
     }
 
-    Err(CommandError::SetDoesntExist)
+    ret.sets_db.execute(
+        "UPDATE sets SET last_revised = ?1 WHERE uuid = ?2",
+        [
+            SystemTime::now()
+                .duration_since(UNIX_EPOCH)?
+                .as_millis()
+                .to_string(),
+            set_uuid,
+        ],
+    )?;
+    return Ok(questions);
 }
 
 #[tauri::command]
@@ -132,19 +145,13 @@ pub fn add_question_to_set(
     ser_question: String,
     ser_answer: String,
 ) -> CommandResult<()> {
-    // let conn = Connection::open("df,gmvjndf,mdgdfth")?;
-    // conn.execute("sql", [])?;
-
     let mut ret = ret.inner().lock().unwrap();
 
     if let Some(conn) = ret.databases.get(&set_uuid) {
         conn.execute(
             "INSERT INTO questions (ser_question, ser_answer) values (?1, ?2);",
             [ser_question, ser_answer],
-        )
-        .unwrap();
-
-        return Ok(());
+        )?;
     } else if files::get_set_db_path(set_uuid.clone()).is_file() {
         let path = files::get_set_db_path(set_uuid.clone());
         if !path.is_file() {
@@ -155,19 +162,19 @@ pub fn add_question_to_set(
         conn.execute(
             "INSERT INTO questions (ser_question, ser_answer) values (?1, ?2);",
             [ser_question, ser_answer],
-        )
-        .unwrap();
-
-        ret.sets_db.execute(
-            "UPDATE sets SET question_count = question_count + 1 WHERE uuid=?1;",
-            [set_uuid.clone()],
         )?;
 
-        ret.databases.insert(set_uuid, conn);
-        return Ok(());
+        ret.databases.insert(set_uuid.clone(), conn);
+    } else {
+        return Err(CommandError::SetDoesntExist);
     }
 
-    Err(CommandError::SetDoesntExist)
+    ret.sets_db.execute(
+        "UPDATE sets SET question_count = question_count + 1 WHERE uuid=?1;",
+        [set_uuid],
+    )?;
+
+    return Ok(());
 }
 
 #[tauri::command]

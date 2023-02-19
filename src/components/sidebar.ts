@@ -10,10 +10,10 @@ export default class Sidebar extends HTMLElement {
 		this.innerHTML = `
 			<div class="sidebar container" id="sidebar">
 				<div class="sidebar-item container active" id="home-btn" oclick="">
-					<img src="/src/assets/home-icon.svg" class="icon" alt="Home" />
+					<img src="/src/assets/pics/home-icon.svg" class="icon" alt="Home" />
 				</div>
 				<div class="sidebar-item container" id="sets-btn">
-					<img src="/src/assets/list-icon.svg" class="icon" alt="Sets" />
+					<img src="/src/assets/pics/list-icon.svg" class="icon" alt="Sets" />
 				</div>
 			</div>
 		`
