@@ -1,6 +1,6 @@
 import { invoke } from "@tauri-apps/api";
 import { SetCard, Set } from "./components/set";
-import { Question, QuestionLayout } from "./pages/question";
+import { Question } from "./pages/question";
 
 // adapted from https://stackoverflow.com/a/12475270
 export function time_since_unix_timestamp(time: number) {
@@ -92,7 +92,8 @@ export class Data {
 
 	async start_revision(uuid: string) {
 		let questions = await invoke("get_set_questions", {
-			setUuid: uuid
+			setUuid: uuid,
+			isForRevision: true,
 		}) as Question[];
 
 		this.revision_data = {

@@ -21,10 +21,32 @@
 </head>
 
 <body>
+			<!-- <img id="eulerr" src="/src/assets/pics/euler.jpg" style=" height: 80vh" /> -->
+
 	<div id="__ROOT" class="main-container row">
 		<div class="content" id="__PAGE-BOX"></div>
 	</div>
 	<script type="module" src="/src/main.ts" defer></script>
+	<!-- The tauri compilation process looks through the HTML and bundles only the assets that are explicitly in the code. -->
+	<!-- Therefore without bloat below, the assets in the wouldn't be loaded, because the only place they are explicitly -->
+	<!-- imported is through TS files in /src/. -->
+	<img src="/src/assets/pics/euler.jpg"     id="A_EULER" style="display:none">
+	<img src="/src/assets/pics/edit-icon.svg" id="A_EDIT" style="display:none">
+	<img src="/src/assets/pics/home-icon.svg" id="A_HOME" style="display:none">
+	<img src="/src/assets/pics/list-icon.svg" id="A_LIST" style="display:none">
+
+	<script>
+		const DEBUG = false;
+
+		window.ASSETS = {
+			"/src/assets/pics/euler.jpg": DEBUG ? "/src/assets/pics/euler.jpg" : document.getElementById("A_EULER").getAttribute("src"),
+			"/src/assets/pics/edit-icon.svg": DEBUG ? "/src/assets/pics/edit-icon.svg" : document.getElementById("A_EDIT").getAttribute("src"),
+			"/src/assets/pics/home-icon.svg": DEBUG ? "/src/assets/pics/home-icon.svg" : document.getElementById("A_HOME").getAttribute("src"),
+			"/src/assets/pics/list-icon.svg": DEBUG ? "/src/assets/pics/list-icon.svg" : document.getElementById("A_LIST").getAttribute("src"),
+		}
+
+		// document.write(document.getElementById("eulerr").getAttribute("id"));
+	</script>
 </body>
 
 </html>

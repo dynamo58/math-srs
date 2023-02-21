@@ -33,7 +33,7 @@
         "icons/icon.icns",
         "icons/icon.ico"
       ],
-      "identifier": "com.tauri.dev",
+      "identifier": "xyz.smolik.math-srs",
       "longDescription": "",
       "macOS": {
         "entitlements": null,
@@ -42,7 +42,9 @@
         "providerShortName": null,
         "signingIdentity": null
       },
-      "resources": [],
+      "resources": [
+		"../src/assets/pics"
+		],
       "shortDescription": "",
       "targets": "all",
       "windows": {

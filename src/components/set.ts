@@ -28,7 +28,7 @@ export class SetCard extends HTMLElement {
 				<div class="set-last set-info__item">Last revised: ${last_revised_str}</div>
 			</div>
 			<div class="set-icon-container container">
-				<img src="/src/assets/pics/edit-icon.svg" alt="set icon" class="set-icon">
+				<img src="${window.ASSETS["/src/assets/pics/edit-icon.svg"]}" alt="set icon" class="set-icon">
 			</div>
 		`;
 	}
@@ -48,6 +48,7 @@ export class SetCard extends HTMLElement {
 		icon_box.onclick = async () => {
 			let questions = await invoke("get_set_questions", {
 				setUuid: this.set.uuid,
+				isForRevision: false,
 			}) as Question[];
 
 			window.dispatchEvent(new CustomEvent<RouteEventProps>('route', {

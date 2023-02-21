@@ -8,6 +8,9 @@ import Sidebar from "./components/sidebar";
 declare global {
 	interface Window {
 		data: Data,
+		ASSETS: {
+			[key: string]: string
+		},
 	}
 }
 
