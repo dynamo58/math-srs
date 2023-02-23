@@ -15,7 +15,7 @@ export class SingleQuestionEditForm extends HTMLElement {
 		this.set_uuid = uuid;
 
 		this.innerHTML = `
-			<div class="editable-question border flex-row" class="width: 100%; justify-content: space-evenly">
+			<div class="editable-question border flex-row">
 				<div class="flex-col" style="flex-grow: 1">
 					<textarea rows="4" class="editing-question-question">${q.ser_question}</textarea>
 					<textarea rows="4" class="editing-question-answer">${q.ser_answer}</textarea>
@@ -77,7 +77,7 @@ export class QuestionEditing extends HTMLElement {
 			<div>
 				<h4 class="center">Edit the set name & description</h4>
 				<div class="add-question-form">
-					<div class="editable-question border flex-row" class="width: 100%; justify-content: space-evenly">
+					<div class="border flex-row">
 						<div class="flex-col" style="flex-grow: 1">
 							<textarea id="set-name" placeholder="New set name">${set.name}</textarea>
 							<textarea id="set-desc" placeholder="New set description">${set.description}</textarea>
@@ -87,10 +87,9 @@ export class QuestionEditing extends HTMLElement {
 						</div>
 					</div>
 				</div>
-				<hr>
 				<h4 class="center">Add a new question to the set</h4>
 				<div class="add-question-form">
-					<div class="editable-question border flex-row" class="width: 100%; justify-content: space-evenly">
+					<div class="border flex-row">
 						<div class="flex-col" style="flex-grow: 1">
 							<textarea rows="4" id="new-question-question" placeholder="Question formulation"></textarea>
 							<textarea rows="4" id="new-question-answer" placeholder="Answer to the question"></textarea>
@@ -100,10 +99,8 @@ export class QuestionEditing extends HTMLElement {
 						</div>
 					</div>
 				</div>
-				<hr>
 				<h4 class="center">Edit individual questions</h4>
 				<div id="set-questions"></div>
-				<hr>
 				<div class="center">
 					<button id="delete-set-btn">Delete set</button>
 				</div>
@@ -121,8 +118,6 @@ export class QuestionEditing extends HTMLElement {
 		});
 
 		delete_set_btn.onclick = () => {
-			// if (!confirm("Are you really sure you want to delete this set? This action is permanent and not reversible.")) return;
-
 			invoke("delete_set", {
 				setUuid: this.set.uuid,
 			})
@@ -138,20 +133,23 @@ export class QuestionEditing extends HTMLElement {
 		}
 
 		add_question_btn.onclick = async () => {
-			const question = (this.querySelector("#new-question-question")! as HTMLTextAreaElement).value;
-			const answer = (this.querySelector("#new-question-answer")! as HTMLTextAreaElement).value;
+			const question_area = (this.querySelector("#new-question-question")! as HTMLTextAreaElement);
+			const answer_area = (this.querySelector("#new-question-answer")! as HTMLTextAreaElement);
 
 			await invoke("add_question_to_set", {
 				setUuid: this.set.uuid,
-				serQuestion: question,
-				serAnswer: answer,
+				serQuestion: question_area.value,
+				serAnswer: answer_area.value,
 			})
 				.then((q_id_in_db) => {
 					question_box.insertAdjacentElement("afterbegin", new SingleQuestionEditForm({
 						id: q_id_in_db as number,
-						ser_question: question,
-						ser_answer: answer,
+						ser_question: question_area.value,
+						ser_answer: answer_area.value,
 					}, this.set.uuid));
+
+					question_area.value = "";
+					answer_area.value = "";
 				})
 				.catch((e) => console.log(e));
 		}

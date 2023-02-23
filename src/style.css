@@ -109,7 +109,7 @@ p {
 	background-color: var(--bg-alt2) !important;
 }
 
-.active-set-sidebar-item:first-child {
+.active-sidebar-item:first-child {
 	margin-top: 1em;
 }
 
@@ -304,8 +304,6 @@ set-card {
 	right: 0;
 }
 
-/*   */
-
 .set-edit-info-bot {
 	margin: 2em;
 	padding: 2em;
@@ -315,7 +313,7 @@ set-card {
 .editable-question {
 	margin: 2em;
 	background-color: var(--bg-alt2);
-	width: min(800px, 95%);
+	width: 100%;
 	margin-left: auto;
 	margin-right: auto;
 }
@@ -337,7 +335,7 @@ textarea {
 	overflow-wrap: normal;
 	overflow-x: scroll;
 	outline: none;
-	resize: none;
+	resize: vertical;
 	height: 50%;
 	-webkit-box-shadow: none;
 	-moz-box-shadow: none;
