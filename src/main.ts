@@ -38,7 +38,7 @@ window.addEventListener("DOMContentLoaded", async () => {
 		page_box.replaceChildren(new QuestionLayout(window.data.pop_question()!)); // TODO
 		eval(`
 			MathJax.typesetClear();
-			MathJax.typesetPromise(document.querySelectorAll(".question"));
+			MathJax.typesetPromise(document.querySelectorAll(".WHAT"));
 		`);
 	}) as EventListener);
 

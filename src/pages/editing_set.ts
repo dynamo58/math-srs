@@ -109,7 +109,7 @@ export class QuestionEditing extends HTMLElement {
 	}
 
 	async connectedCallback() {
-		const question_box = document.getElementById("set-questions")! as HTMLDivElement;
+		const question_box = this.querySelector("#set-questions")! as HTMLDivElement;
 		const add_question_btn = this.querySelector("#new-question-submit-btn")! as HTMLButtonElement;
 		const delete_set_btn = this.querySelector("#delete-set-btn")! as HTMLButtonElement;
 

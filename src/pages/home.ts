@@ -3,7 +3,7 @@ export default class Home extends HTMLElement {
 		super();
 
 		this.innerHTML = `
-			<p style="font-style: italic; font-size: 1.7em" class="center">
+			<p class="quote center" style="font-style: italic; font-size: 1.7em" class="center">
 				Now I will have less distraction.
 			</p>
 				<div class="container" style="display: grid; justify-content: center; align-items: center;">

@@ -13,13 +13,17 @@ export class QuestionLayout extends HTMLElement {
 		super();
 
 		this.innerHTML = `
-			<div class="question">
-				<div class="center" id="question-question">
-					${q.ser_question}
+			<div class="question center">
+				<div class="WHAT">
+					<p class="math" id="question-question">
+						${q.ser_question.replaceAll("\n", "<br>")}
+					</p>
 				</div>
-				<hr>
-				<div id="question-answer" class="is-disabled center">
-					${q.ser_answer}
+				<hr style="width: 100%">
+				<div id="question-answer" class="WHAT is-disabled">
+					<p class="math">
+						${q.ser_answer.replaceAll("\n", "<br>")}
+					</p>
 				</div>
 				<div class="question-btns-div">
 					<button id="question-reveal-btn">Reveal answer</button>
@@ -49,7 +53,7 @@ export class QuestionLayout extends HTMLElement {
 				window.dispatchEvent(new CustomEvent('end-revision'));
 			}
 		} else {
-			next_btn.innerText = `Next question (${window.data.revision_data!.count_at_start - window.data.revision_data!.questions.length} left)`;
+			next_btn.innerText = `Next question (${window.data.revision_data!.questions.length} left)`;
 			next_btn.onclick = () => {
 				window.dispatchEvent(new CustomEvent('next-question'))
 			}

@@ -33,6 +33,17 @@
 	src: url("assets/fonts/cascadia.ttf");
 }
 
+@font-face {
+	font-family: cmu;
+	src: url("assets/fonts/cmu-roman.ttf");
+}
+
+@font-face {
+	font-family: cmu;
+	src: url("assets/fonts/cmu-italic.ttf");
+	font-style: italic;
+}
+
 html,
 body {
 	margin: 0;
@@ -47,7 +58,17 @@ body {
 	box-sizing: border-box;
 }
 
-p {
+.math,
+.math>ol,li {
+	font-family: cmu;
+}
+
+
+.WHAT {
+	width: min(1200px, 100%);
+}
+
+.quote {
 	font-family: garamond;
 }
 
@@ -118,6 +139,7 @@ p {
 	height: 100%;
 	overflow-y: scroll;
 	padding-top: 1em;
+	padding-bottom: 5em;
 }
 
 #content-frame {
